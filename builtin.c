@@ -14,13 +14,13 @@ int p_myexit(info_t *info)
 
 	if (info->argv[1])
 	{
-		exitcheck = _erratoi(info->argv[1]);
+		exitcheck = p_erratoi(info->argv[1]);
 		if (exitcheck == -1)
 		{
 			info->status = 2;
-			print_error(info, "Illegal number: ");
-			_eputs(info->argv[1]);
-			_eputchar('\n');
+			p_print_error(info, "Illegal number: ");
+			p_eputs(info->argv[1]);
+			p_eputchar('\n');
 			return (1);
 		}
 		info->err_num = _erratoi(info->argv[1]);
@@ -44,27 +44,27 @@ int p_mycd(info_t *info)
 
 	p = getcwd(buffer, 1024);
 	if (!p)
-		_puts("TODO: >>getcwd failure emsg here<<\n");
+		p_puts("TODO: >>getcwd failure emsg here<<\n");
 	if (!info->argv[1])
 	{
-		dir = _getenv(info, "HOME=");
+		dir = p_getenv(info, "HOME=");
 		if (!dir)
-			chdir_ret = /* TODO: what should this be? */
-				chdir((dir = _getenv(info, "PWD=")) ? dir : "/");
+			chdir_ret = 
+				chdir((dir = p_getenv(info, "PWD=")) ? dir : "/");
 		else
 			chdir_ret = chdir(dir);
 	}
-	else if (_strcmp(info->argv[1], "-") == 0)
+	else if (p_strcmp(info->argv[1], "-") == 0)
 	{
-		if (!_getenv(info, "PPWD="))
+		if (!p_getenv(info, "PPWD="))
 		{
 			_puts(p);
-			_putchar('\n');
+			p_putchar('\n');
 			return (1);
 		}
-		_puts(_getenv(info, "PPWD=")), _putchar('\n');
+		_puts(p_getenv(info, "PPWD=")), _putchar('\n');
 		chdir_ret = /* TODO: what should this be? */
-			chdir((dir = _getenv(info, "PPWD=")) ? dir : "/");
+			chdir((dir = p_getenv(info, "PPWD=")) ? dir : "/");
 	}
 	else
 		chdir_ret = chdir(info->argv[1]);
@@ -75,8 +75,8 @@ int p_mycd(info_t *info)
 	}
 	else
 	{
-		_setenv(info, "PPWD", _getenv(info, "PWD="));
-		_setenv(info, "PWD", getcwd(buffer, 1024));
+		p_setenv(info, "PPWD", p_getenv(info, "PWD="));
+		p_setenv(info, "PWD", getcwd(buffer, 1024));
 	}
 	return (0);
 }
